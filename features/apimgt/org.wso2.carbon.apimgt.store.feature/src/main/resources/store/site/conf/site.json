@@ -29,9 +29,9 @@
         //"nameIdPolicy" : "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified", //If not specified, 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified' will be used
     },
     "registrationEmail":{
-        "from":"WSO2 Cloud Team <cloud+staging@wso2.com>",
-        "username":"wso2heartbeat@gmail.com",
-        "password":"w$o2admin",
+        "from":"from",
+        "username":"test@gmail.com",
+        "password":"test",
         "host":"smtp.gmail.com",
         "port":"25",
         "tls":"true"
