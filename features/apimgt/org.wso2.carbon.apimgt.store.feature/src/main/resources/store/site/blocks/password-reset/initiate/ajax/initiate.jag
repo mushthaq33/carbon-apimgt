@@ -8,7 +8,8 @@ include("/jagg/jagg.jag");
 
     if (action == "initiatePasswordReset") {
         var email = request.getParameter("email");
-        result = mod.initiatePasswordReset(email);
+        var tenant = jagg.getTenantDomain();
+        result = mod.initiatePasswordReset(email, tenant);
         if (result != null) {
             print(result);
         }

@@ -1,4 +1,10 @@
-<% jagg.template("password-reset/initiate", function (inputs, outputs, jagg) { %>
+<% jagg.template("password-reset/initiate", function (inputs, outputs, jagg) {
+   var site = require("/site/conf/site.json");
+   var isCustomUrl = true;
+   if( site.reverseProxy.tenantHeader == null || request.getHeader(site.reverseProxy.tenantHeader) == null){
+      isCustomUrl = false;
+   }
+ %>
 
  <div class="page-content-wrapper">
     <div class="container-fluid ">
@@ -32,11 +38,13 @@
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         <div class="input-group input-wrap">
                                             <input type="text" id="email" name="email" title="<%=i18n.localize("Username")%>" class="required" placeholder="<%=i18n.localize("Username")%>"  />
+                                            <input type="hidden" name="customUrl" id="customUrl" value="<%=isCustomUrl%>"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        
                                         <input type="submit" id="submitbtn" value="<%=i18n.localize("Request Password Change")%>" class="btn btn-default btn-primary add-margin-right-2x"/>
                                         <i class="fa fa-spinner fa-spin fa-4x" id="spinner" style="display:none; margin-left: 10px;"></i>
                                     </div>

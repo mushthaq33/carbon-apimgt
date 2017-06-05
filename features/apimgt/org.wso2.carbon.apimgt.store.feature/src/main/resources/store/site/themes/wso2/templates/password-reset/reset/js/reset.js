@@ -2,12 +2,12 @@ $(document).ready(function ($) {
     generateResponse();
 });
 
-function generateResponse() {
-    //alert($("#id").attr('value'));
+function generateResponse() {    
+    var isCustomeUrl = $("#customUrl").attr('value');
     jagg.post("/site/blocks/password-reset/reset/ajax/reset.jag", {
             action: "verifyPasswordResetConfirmationCode",
             confirm: $("#confirm").attr('value'),
-            id: $("#id").attr('value')
+            id: $("#id").attr('value')            
         },
         function (result) {
             var json = JSON.parse(result.replace(/[\r\n]/g, ""));
@@ -18,7 +18,11 @@ function generateResponse() {
                         "Please try again by generating a new link.",
                         type: 'error',
                         cbk: function () {
-                            window.location.href = "initiate.jag";
+                            if(isCustomeUrl == "true"){
+                                 window.location.href = "/site/pages/initiate.jag";
+                            } else {
+                                 window.location.href = jagg.url("/site/pages/initiate.jag");
+                            }
                         }
                     });
                 } else if (json.message.indexOf("Expired code") != -1) {
@@ -27,7 +31,11 @@ function generateResponse() {
                         "a new link.",
                         type: 'error',
                         cbk: function () {
-                            window.location.href = "initiate.jag";
+                            if(isCustomeUrl == "true"){
+                                 window.location.href = "/site/pages/initiate.jag";
+                            } else {
+                                 window.location.href = jagg.url("/site/pages/initiate.jag");
+                            }
                         }
                     });
                 } else {
@@ -36,12 +44,20 @@ function generateResponse() {
                         "been expired",
                         type: 'error',
                         cbk: function () {
-                            window.location.href = "index.jag";
+                            if(isCustomeUrl == "true"){
+                                window.location.href = "/site/pages/login.jag";
+                            } else {
+                                window.location.href = jagg.url("/site/pages/login.jag");
+                            }
                         }
                     });
                 }
             } else {
-                window.location.href = "password-verifier.jag";
+                if(isCustomeUrl == "true"){
+                     window.location.href = "/site/pages/password-verifier.jag";
+                } else {
+                     window.location.href = jagg.url("/site/pages/password-verifier.jag");
+                }
             }
         });
 }

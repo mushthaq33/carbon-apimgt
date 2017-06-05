@@ -7,7 +7,8 @@ jagg.block("password-reset/verifier", {
         //log.info("Block inputs: " + stringify(inputs));
         return {
             confirmationKey: inputs.middle[0].inputs.confirmationKey,
-            username: inputs.middle[0].inputs.username
+            username: inputs.middle[0].inputs.username,
+            tenant: inputs.middle[0].inputs.tenant
         };
     }
 });

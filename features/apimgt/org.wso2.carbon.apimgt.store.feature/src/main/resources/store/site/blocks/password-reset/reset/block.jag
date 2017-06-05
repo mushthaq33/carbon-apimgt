@@ -5,10 +5,10 @@ jagg.block("password-reset/reset", {
     },
 
     getOutputs: function (inputs) {
-        //log.info("Block inputs: " + stringify(inputs));
         return {
             confirm: inputs.middle[0].inputs.confirm,
-            id: inputs.middle[0].inputs.id
+            id: inputs.middle[0].inputs.id,
+            tenantDomain: inputs.middle[0].inputs.tenantDomain
         };
     }
 });

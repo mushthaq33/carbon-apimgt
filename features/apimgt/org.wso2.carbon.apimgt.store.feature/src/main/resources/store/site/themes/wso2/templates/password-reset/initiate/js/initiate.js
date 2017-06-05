@@ -8,6 +8,7 @@ function disableSubmitButton() {
 function doSubmit() {
     disableSubmitButton();
     var email = $("#email").val();
+    var isCustomeUrl = $("#customUrl").attr('value');
     jagg.post("/site/blocks/password-reset/initiate/ajax/initiate.jag", {
             action: "initiatePasswordReset",
             email: email
@@ -21,15 +22,23 @@ function doSubmit() {
                     content: 'Password recovery instructions have been sent to ' + email + '. Please check your email.',
                     type: 'success',
                     cbk: function () {
-                        window.location.href = "index.jag";
+                        if(isCustomeUrl == "true"){
+                            window.location.href = "/site/pages/login.jag";
+                        } else {
+                            window.location.href = jagg.url("/site/pages/login.jag");
+                        }
                     }
                 });
-            } else if (response.message.indexOf("Invalid User name") != -1) {
+            } else if ((response.message.indexOf("invalid user") != -1) || (response.message.indexOf("User does not exist") != -1)) {
                 jagg.message({
                     content: 'No account found with the given email. Please try again with a correct email.',
                     type: 'error',
                     cbk: function () {
-                        window.location.href = "initiate.jag";
+                        if(isCustomeUrl == "true"){
+                            window.location.href = "/site/pages/initiate.jag";
+                        } else {
+                            window.location.href = jagg.url("/site/pages/initiate.jag");
+                        }
                     }
                 });
             } else {
@@ -38,7 +47,11 @@ function doSubmit() {
                     ' If you still have issues, please contact us <a href="mailto:cloud@wso2.com">(cloud@wso2.com)</a>',
                     type: 'error',
                     cbk: function () {
-                        window.location.href = "index.jag";
+                        if(isCustomeUrl == "true"){
+                            window.location.href = "/site/pages/login.jag";
+                        } else {
+                            window.location.href = jagg.url("/site/pages/login.jag");
+                        }
                     }
                 });
             }

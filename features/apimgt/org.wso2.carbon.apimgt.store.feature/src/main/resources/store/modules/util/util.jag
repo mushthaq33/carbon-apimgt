@@ -79,5 +79,49 @@ var getUsernameWithTenantDomain = function(username, tenantDomain) {
     return  username + "@" + tenantDomain;
 };
 
+var sendEmail = function (body, subject, receiverAddress) {
+
+    var apiConfig = require("/site/conf/site.json");
+
+    var from = apiConfig.registrationEmail.from;
+    var senderEmail = apiConfig.registrationEmail.username;
+    var senderPort = parseInt(apiConfig.registrationEmail.port);
+    var senderPassword= apiConfig.registrationEmail.password;
+    var senderHost= apiConfig.registrationEmail.host;
+    var tls = apiConfig.registrationEmail.tls.toString();
+
+    var email = require('apistore');
+    var sender;
+    if (tls == "true") {
+        sender = new email.Sender(senderHost, senderPort.toString(), senderEmail,senderPassword,"tls");
+    } else {
+        sender = new email.Sender(senderHost, senderPort.toString(), senderEmail,senderPassword);
+
+    }
+    sender.from = from;
+    sender.to = receiverAddress;
+    sender.subject = subject;
+    sender.html = body;
+    sender.send();
+    return true;
+};
+
+var getObjFromFile = function(pathTofile) {
+    var dataObj;
+    if(log.isDebugEnabled()){
+        log.debug("Reading file : " + pathTofile);
+    }
+    try{
+        var file = new File(pathTofile);
+        file.open("r");
+        dataObj = file.readAll();
+        file.close();
+    }catch (e) {
+        log.error("Error while reading file " + pathTofile + "\n" + e);
+        throw "Error while reading file " + pathTofile + "\n" + e;
+    }
+
+    return  dataObj;
+};
 %>
 

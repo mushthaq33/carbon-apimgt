@@ -21,7 +21,8 @@ if (action == "updatePasswordWithUserInput") {
     var username = request.getParameter("username");
     var newPassword = request.getParameter("password");
     var confirmationKey = request.getParameter("confirmationKey");
-    var result = mod.updatePasswordWithUserInput(username, newPassword, confirmationKey);
+    var tenantedUsername = username + "@" + jagg.getTenantDomain();
+    var result = mod.updatePasswordWithUserInput(tenantedUsername, newPassword, confirmationKey);
     print(result);
 } else {
     throw new Error("No action specified");

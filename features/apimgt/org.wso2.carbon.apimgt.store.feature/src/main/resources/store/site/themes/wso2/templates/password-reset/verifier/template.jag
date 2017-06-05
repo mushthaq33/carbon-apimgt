@@ -1,4 +1,11 @@
-<% jagg.template("password-reset/verifier", function(inputs, outputs, jagg) { %>
+<% jagg.template("password-reset/verifier", function(inputs, outputs, jagg) {
+   var site = require("/site/conf/site.json");
+   var isCustomUrl = true;
+   if( site.reverseProxy.tenantHeader == null || request.getHeader(site.reverseProxy.tenantHeader) == null){
+      isCustomUrl = false;
+   }
+
+ %>
 
 <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/jquery.validate.password.js'))%>"></script>
 <!--<div class="container content-starter">
@@ -102,6 +109,8 @@
                                  </div>
                                 <input type="hidden" name="confirmationKey" id="confirmationKey" value="<%=outputs.confirmationKey%>" />
                                 <input type="hidden" name="username" id="username" value="<%=outputs.username%>" />
+                                <input type="hidden" name="tenant" id="tenant" value="<%=outputs.tenant%>" />
+                                <input type="hidden" name="customUrl" id="customUrl" value="<%=isCustomUrl%>"/>
                                 <div class="form-group">
                                    <label for="username" class="col-sm-2 control-label">Username</label>
                                    <div class="col-sm-8">

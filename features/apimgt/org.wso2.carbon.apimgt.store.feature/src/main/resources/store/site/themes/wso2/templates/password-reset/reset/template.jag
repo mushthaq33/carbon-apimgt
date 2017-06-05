@@ -1,11 +1,18 @@
 <% jagg.template("password-reset/reset", function(inputs, outputs, jagg) {
+   var site = require("/site/conf/site.json");
+   var isCustomUrl = true;
+   if( site.reverseProxy.tenantHeader == null || request.getHeader(site.reverseProxy.tenantHeader) == null){
+      isCustomUrl = false;
+   }
    %>
 
 <div class="wrapper">
    <article class="start">
       <div class="alert alert-error error" id="registerError"><% jagg.includeBlock("page/messages", null); %></div>
       <input type="hidden" name="confirm" id="confirm" value="<%=outputs.confirm%>"/>
+      <input type="hidden" name="tenant" id="tenant" value="<%=outputs.tenantDomain%>"/>
       <input type="hidden" name="id" id="id" value="<%=outputs.id%>"/>
+      <input type="hidden" name="customUrl" id="customUrl" value="<%=isCustomUrl%>"/>
    </article>
 </div>
 

@@ -7,5 +7,9 @@
                 <className>org.wso2.carbon.apimgt.hostobjects.MutualAuthHostObject</className>
                 <name>MutualAuthHostObject</name>
         </hostObject>
+        <hostObject>
+            <className>org.jaggeryjs.modules.email.SenderHostObject</className>
+            <name>Sender</name>
+        </hostObject>
 </module>
 

@@ -3,6 +3,7 @@ function doSubmit() {
     var username = $("#username").val();
     var password = $("#password").val();
     var confirmationKey = $("#confirmationKey").val();
+    var isCustomeUrl = $("#customUrl").attr('value');
     jagg.post("/site/blocks/user/change/ajax/user.jag", {
             action: "updatePasswordWithUserInput",
             username: username,
@@ -18,7 +19,11 @@ function doSubmit() {
                     content: 'You have successfully reset your password. Please log in using your new password.',
                     type: 'success',
                     cbk: function () {
-                        window.location.href = "index.jag";
+                        if(isCustomeUrl == "true"){
+                            window.location.href = "/site/pages/login.jag";
+                        } else {
+                            window.location.href = jagg.url("/site/pages/login.jag");
+                        }
                     }
                 });
             } else {
@@ -27,7 +32,11 @@ function doSubmit() {
                     ' If you still have issues, please contact us at <a href="mailto:cloud@wso2.com">cloud@wso2.com</a>',
                     type: 'error',
                     cbk: function () {
-                        window.location.href = "index.jag";
+                        if(isCustomeUrl == "true"){
+                            window.location.href = "/site/pages/login.jag";
+                        } else {
+                            window.location.href = jagg.url("/site/pages/login.jag");
+                        }
                     }
                 });
             }

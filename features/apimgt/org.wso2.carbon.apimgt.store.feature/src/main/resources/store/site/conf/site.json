@@ -28,6 +28,17 @@
         //"acsURL" : "https://localhost:9443/store/jagg/jaggery_acs.jag", //In passive or request signing mode, use only if default Assertion Consumer Service URL needs to be overidden
         //"nameIdPolicy" : "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified", //If not specified, 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified' will be used
     },
+    "registrationEmail":{
+        "from":"WSO2 Cloud Team <cloud+staging@wso2.com>",
+        "username":"wso2heartbeat@gmail.com",
+        "password":"w$o2admin",
+        "host":"smtp.gmail.com",
+        "port":"25",
+        "tls":"true"
+    },
+    "passwordResetEmail": {
+        "subject": "WSO2 Cloud Services - Password Reset"
+    },
     "oidcConfiguration" : {
       "enabled" : "false",
       "issuer" : "API_STORE",

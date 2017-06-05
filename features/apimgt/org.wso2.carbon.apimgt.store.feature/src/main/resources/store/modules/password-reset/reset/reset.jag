@@ -11,11 +11,11 @@ var multitenancy = carbon.multitenancy;
 var cloudConfig = jagg.module("util").getJsonFromFile(CLOUD_MGT_CONFIG_FILE);
 var IS_URL = cloudConfig.ServerUrls.identity.toString();
 
-var verifyPasswordResetConfirmationCode = function (confirm, id) {
+var verifyPasswordResetConfirmationCode = function (confirm, id, tenant) {
     log.info("Verifying password reset confirmation code of the user [ " + id + " ]");
-
+    var tenantedUsername = id + "@" + tenant;
     try {
-        var verifiedObj = UserInfoRecoveryClient.verifyConfirmationCode(id, confirm, null);
+        var verifiedObj = UserInfoRecoveryClient.verifyConfirmationCode(tenantedUsername, confirm, null);
         var error = verifiedObj.getError();
         var data = {};
         if (verifiedObj.getVerified()) {
@@ -23,6 +23,7 @@ var verifyPasswordResetConfirmationCode = function (confirm, id) {
             data.verified = true;
             data.confirmationKey = verifiedObj.getKey();
             data.userName = id;
+            data.tenant = tenant;
             session.put('intermediate-data', stringify(data));
             return {
                 error: false,

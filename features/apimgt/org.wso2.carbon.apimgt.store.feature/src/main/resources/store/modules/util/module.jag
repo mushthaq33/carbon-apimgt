@@ -11,6 +11,12 @@ jagg.module("util", {
     },
     getUsernameWithTenantDomain: function () {
         return jagg.require(jagg.getModulesDir() + "util/util.jag").getUsernameWithTenantDomain.apply(this, arguments);
+    },
+    sendEmail: function () {
+        return jagg.require(jagg.getModulesDir() + "util/util.jag").sendEmail.apply(this, arguments);
+    },
+    getObjFromFile: function () {
+        return jagg.require(jagg.getModulesDir() + "util/util.jag").getObjFromFile.apply(this, arguments);
     }
 });
 %>

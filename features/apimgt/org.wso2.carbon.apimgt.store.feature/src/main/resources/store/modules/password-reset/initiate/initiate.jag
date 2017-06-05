@@ -6,17 +6,17 @@ var log = new Log("modules.user.initiate.initiate.jag");
 var UserInfoRecoveryClient = Packages.org.wso2.carbon.apimgt.impl.utils.APIUtil.getUserInformationRecoveryClient();
 var carbon = require('carbon');
 var server = carbon.server;
-var cloudConfig = jagg.module("util").getJsonFromFile(CLOUD_MGT_CONFIG_FILE);
-var from = cloudConfig.registrationEmail.from;
-var subject = cloudConfig.passwordResetEmail.subject;
+var apiConfig = require("/site/conf/site.json");
+var subject = apiConfig.passwordResetEmail.subject;
+var body = jagg.module("util").getObjFromFile("/site/conf/emails/password_reset_email_body.txt");
 
-var initiatePasswordReset = function (email) {
+var initiatePasswordReset = function (email, tenant) {
     try {
         log.info("Initiating password reset for [ " + email + " ]");
-        var verifyResult = UserInfoRecoveryClient.VerifyUser(email);
+        var verifyResult = UserInfoRecoveryClient.VerifyUser(email + "@" +tenant);
 
         if (verifyResult.getVerified()) {
-            var result = sendRecoveryNotification(email, verifyResult.getKey());
+            var result = sendRecoveryNotification(email, verifyResult.getKey(), tenant);
             return {
                 error: false,
                 status: 200
@@ -41,17 +41,19 @@ var initiatePasswordReset = function (email) {
 };
 
 
-var sendRecoveryNotification = function (userName, key) {
-    log.info("Getting recovery notification data for user [ " + userName + " ]");
+var sendRecoveryNotification = function (email, key, tenant) {
+    log.info("Getting recovery notification data for user [ " + email + " ]");
 
     try {
-        var verifyResult = UserInfoRecoveryClient.sendRecoveryNotification(userName, key, "EMAIL");
+        var verifyResult = UserInfoRecoveryClient.sendRecoveryNotification(email + "@" +tenant, key, "EMAIL");
         if (verifyResult.getVerified()) {
-            log.info("Recovery notification data retrieved successfully for the user [ " + userName
+            var notificationKey = verifyResult.getNotificationData().getNotificationCode();
+            log.info("Recovery notification data retrieved successfully for the user [ " + email
                     + " ] with email [ " + verifyResult.getVerified() + " ]");
+            sendRecoveryEmail(notificationKey, email, tenant);
             return "Email sent successfully";
         } else {
-            throw "Failed to retrieve recovery notification data for user [ " + userName + " ] due to - "
+            throw "Failed to retrieve recovery notification data for user [ " + email + " ] due to - "
             + verifyResult.getError();
         }
     } catch (e) {
@@ -61,5 +63,19 @@ var sendRecoveryNotification = function (userName, key) {
     }
 };
 
+var sendRecoveryEmail = function (notificationCode, emailAddress, tenant) {
+    log.info("Sending Email to [ " + emailAddress + " ]");
+    var link = jagg.getAbsoluteUrl("/site/pages/reset.jag?id=" + emailAddress + "&confirmation=" + notificationCode + "&tenant=" + tenant);
+    try {
+        body = body.replace("$passwordRestLink", link).replace("$passwordRestLink", link);
+        body = body.replace("$userName", emailAddress.toString()).replace("$userName", emailAddress.toString());
+        jagg.module("util").sendEmail(body, subject, emailAddress.toString());
+        log.info("Email successfully sent to [ " + emailAddress + " ]");
+    } catch (e) {
+        log.error("Error while sending email \n");
+        log.error(e);
+        throw e;
+    }
+};
 
 %>
